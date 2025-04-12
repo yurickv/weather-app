@@ -1,98 +1,93 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🌦️ Weather App (NestJS + PostgreSQL + OpenWeather)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Сервіс на NestJS, який фетчить погодні дані з OpenWeather API та зберігає їх у базу PostgreSQL в JSON-форматі. Працює в Docker, має 2 REST API: `POST` для збереження даних і `GET` для витягування та форматованої відповіді.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 🚀 Функціонал
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Фетчинг погоди по координатам (lat, lon) з OpenWeather API
+- Збереження відповіді в PostgreSQL (`JSONB`)
+- Отримання збережених даних
+- Відповідь автоматично форматована інтерцептором NestJS
 
-## Project setup
+---
 
+## 🧱 Технології
+
+- **NestJS**
+- **PostgreSQL**
+- **TypeORM**
+- **Axios**
+- **Docker & Docker Compose**
+- **.env конфігурація**
+
+---
+
+## 📦 Встановлення та запуск
+
+### 1. Клонувати репозиторій
 ```bash
-$ npm install
-```
+git clone https://github.com/yourname/weather-app.git
+cd weather-app  
 
-## Compile and run the project
+### 2. Налаштувати .env
+bash
+DATABASE_URL=postgres://weather:secret@postgres:5432/weatherdb
+WEATHER_API_KEY=your_openweather_api_key  # потрібен One Call by Call план
 
-```bash
-# development
-$ npm run start
+### 3. Запуск у Docker
+docker compose up --build
 
-# watch mode
-$ npm run start:dev
+📮 API
+🔹 POST /weather/fetch
+Опис: Фетчить дані з OpenWeather і зберігає в БД
 
-# production mode
-$ npm run start:prod
-```
+Запит:
 
-## Run tests
+bash
+POST http://localhost:3000/weather/fetch
+Content-Type: application/json
+Тіло:
+json
+{
+  "lat": 50.45,
+  "lon": 30.52,
+  "part": "minutely"
+}
 
-```bash
-# unit tests
-$ npm run test
+🔹 GET /weather
+Опис: Повертає збережені дані по координатах у форматованому вигляді
 
-# e2e tests
-$ npm run test:e2e
+Запит:
+bash
+GET http://localhost:3000/weather?lat=50.45&lon=30.52&part=minutely
 
-# test coverage
-$ npm run test:cov
-```
+Відповідь:
+json
+{
+  "sunrise": 1684926645,
+  "sunset": 1684977332,
+  "temp": 292.55,
+  "feels_like": 292.87,
+  "pressure": 1014,
+  "humidity": 89,
+  "uvi": 0.16,
+  "wind_speed": 3.13
+}
 
-## Deployment
+🧪 Тестування
+Запусти API через docker compose up --build
+Перевір POST /weather/fetch через Postman або curl
+Потім виконай GET /weather і переконайся, що відповідь форматована
+Перевір логи та консоль, щоб бачити запити до API
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+📂 Скрипти
+Команда	Опис
+npm run start:dev	Запуск у dev режимі
+npm run build	Білд проєкту
+npm run lint	ESLint перевірка
+npm run format	Причесати код через Prettier
+⚠️ Важливо
+Для використання One Call 3.0 потрібна платна підписка на One Call by Call
+Без неї можна використовувати One Call 2.5, але з обмеженнями
